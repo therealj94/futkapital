@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e1a">
+<title>FutKapital Pro - Simulador de Trading Deportivo</title>
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border: #2d3748;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  zoom: 0.9;
+  -moz-transform: scale(0.9);
+  -moz-transform-origin: 0 0;
+}
+
+/* HEADER */
+.header {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+}
+
+.nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent);
+}
+
+.nav-link.active {
+  background: var(--accent);
+  color: white;
+}
+
+.balance-display {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+/* BUTTONS */
+.btn {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: #1f2937;
+}
+
+/* GRID LAYOUTS */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* MATCH SCOREBOARD */
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.team.right {
+  flex-direction: row-reverse;
+}
+
+.team-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: white;
+  padding: 10px;
+  object-fit: contain;
+  border: 3px solid var(--border);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.team-info h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.team-price {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.score-center {
+  text-align: center;
+  min-width: 200px;
+}
+
+.score {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.match-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-live {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.status-paused {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+}
+
+.match-time {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* CONTROLS */
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.input-group label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.input {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  width: 100px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.select {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* CHART */
+.chart-container {
+  width: 100%;
+  height: 450px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.chart {
+  width: 100%;
+  height: 100%;
+}
+
+/* STATS */
+.stat-box {
+  background: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* TRADING PANEL */
+.trading-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background: #1f2937;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.quick-amounts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.quick-btn {
+  padding: 0.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  color: var(--text-primary);
+}
+
+.quick-btn:hover {
+  background: #1f2937;
+  border-color: var(--accent);
+}
+
+/* LOG */
+.log {
+  height: 250px;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+.log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.log::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.log-entry {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(45, 55, 72, 0.5);
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 2rem;
+  border: 1px solid var(--border);
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.close-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* PORTFOLIO */
+.portfolio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.portfolio-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.portfolio-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  padding: 6px;
+  object-fit: contain;
+  border: 2px solid var(--border);
+}
+
+.portfolio-name {
+  font-weight: 600;
+}
+
+.portfolio-amount {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.portfolio-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+/* CURRENCIES */
+.currency-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.currency-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.currency-card:hover {
+  border-color: var(--accent);
+}
+
+.currency-card.selected {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.currency-flag {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.currency-code {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.currency-name {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ANIMATIONS */
+.goal-animation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--accent);
+  z-index: 9999;
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+  animation: goalPop 1s ease-out;
+  pointer-events: none;
+  display: none;
+}
+
+.goal-animation.show {
+  display: block;
+}
+
+@keyframes goalPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* NOTIFICATION */
+.notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  min-width: 300px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification.success {
+  border-left: 4px solid var(--success);
+}
+
+.notification.error {
+  border-left: 4px solid var(--danger);
+}
+
+.notification.info {
+  border-left: 4px solid var(--accent);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .nav {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .scoreboard {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .team {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .currency-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-content">
+    <div class="logo">⚽ FutKapital Pro</div>
+    <nav class="nav">
+      <a href="#/ligas" class="nav-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+          <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
+        </svg>
+        Ligas
+      </a>
+      <a href="#/simulador" class="nav-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        Simulador
+      </a>
+      <a href="#/billetera" class="nav-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="M7 15h0M2 9.5h20"></path>
+        </svg>
+        Billetera
+      </a>
+      <a href="#/ranking" class="nav-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+          <path d="M4 22h16"></path>
+          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+        </svg>
+        Ranking
+      </a>
+    </nav>
+    <div class="balance-display" id="balance">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+        <path d="M12 18V6"></path>
+      </svg>
+      1000.00 USDK
+    </div>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+  <div id="app"></div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Crear Cuenta</h2>
+      <button class="close-btn" id="closeLogin">&times;</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <div>
+        <label style="font-size: 0.875rem; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Nombre</label>
+        <input type="text" class="input" id="userName" placeholder="Tu nombre" style="width: 100%;">
+      </div>
+      <div>
+        <label style="font-size: 0.875rem; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Email</label>
+        <input type="email" class="input" id="userEmail" placeholder="tu@email.com" style="width: 100%;">
+      </div>
+      <div>
+        <label style="font-size: 0.875rem; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Contraseña</label>
+        <input type="password" class="input" id="userPass" placeholder="••••••••" style="width: 100%;">
+      </div>
+      <button class="btn btn-primary" id="createAccount" style="width: 100%; margin-top: 0.5rem;">Crear Cuenta</button>
+      <p style="font-size: 0.75rem; color: var(--text-secondary); text-align: center;">
+        Se te asignarán 1000 USDK para comenzar
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Cashout Modal -->
+<div class="modal" id="cashoutModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Retirar Fondos</h2>
+      <button class="close-btn" id="closeCashout">&times;</button>
+    </div>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.875rem;">
+      Selecciona la moneda para tu retiro
+    </p>
+    <div class="currency-grid" id="currencyGrid">
+      <div class="currency-card" data-currency="USD" onclick="selectCurrency('USD')">
+        <div class="currency-flag">🇺🇸</div>
+        <div class="currency-code">USD</div>
+        <div class="currency-name">Dólar - $1.00</div>
+      </div>
+      <div class="currency-card" data-currency="HNL" onclick="selectCurrency('HNL')">
+        <div class="currency-flag">🇭🇳</div>
+        <div class="currency-code">HNL</div>
+        <div class="currency-name">Lempira - L24.75</div>
+      </div>
+      <div class="currency-card" data-currency="MXN" onclick="selectCurrency('MXN')">
+        <div class="currency-flag">🇲🇽</div>
+        <div class="currency-code">MXN</div>
+        <div class="currency-name">Peso - $17.20</div>
+      </div>
+      <div class="currency-card" data-currency="CRC" onclick="selectCurrency('CRC')">
+        <div class="currency-flag">🇨🇷</div>
+        <div class="currency-code">CRC</div>
+        <div class="currency-name">Colón - ₡515.50</div>
+      </div>
+      <div class="currency-card" data-currency="GTQ" onclick="selectCurrency('GTQ')">
+        <div class="currency-flag">🇬🇹</div>
+        <div class="currency-code">GTQ</div>
+        <div class="currency-name">Quetzal - Q7.75</div>
+      </div>
+      <div class="currency-card" data-currency="NIO" onclick="selectCurrency('NIO')">
+        <div class="currency-flag">🇳🇮</div>
+        <div class="currency-code">NIO</div>
+        <div class="currency-name">Córdoba - C$36.80</div>
+      </div>
+    </div>
+    <div style="margin-top: 1rem;">
+      <label style="font-size: 0.875rem; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">Cantidad (USDK)</label>
+      <input type="number" class="input" id="cashoutAmount" placeholder="0.00" style="width: 100%;" oninput="updateCashoutSummary()">
+    </div>
+    <div id="cashoutSummary" style="display: none; background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span>Monto:</span>
+        <span id="summaryAmount">0 USDK</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span>Comisión (2%):</span>
+        <span id="summaryFee">0 USDK</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-weight: 700; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+        <span>Recibirás:</span>
+        <span id="summaryTotal" style="color: var(--accent);">-</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="confirmCashout" style="width: 100%;" disabled onclick="processCashout()">
+      Confirmar Retiro
+    </button>
+  </div>
+</div>
+
+<!-- Goal Animation -->
+<div class="goal-animation" id="goalAnimation">⚽ ¡GOOOL!</div>
+
+<script>
+// ============================================
+// STORAGE & STATE
+// ============================================
+const KEY = 'fk_state_v6';
+const UKEY = 'fk_user_v6';
+
+const Storage = {
+  save: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  load: (k) => {
+    try {
+      return JSON.parse(localStorage.getItem(k));
+    } catch {
+      return null;
+    }
+  },
+  remove: (k) => localStorage.removeItem(k)
+};
+
+// Exchange rates
+const RATES = {
+  USD: { rate: 1.00, symbol: '$' },
+  HNL: { rate: 24.75, symbol: 'L' },
+  MXN: { rate: 17.20, symbol: '$' },
+  CRC: { rate: 515.50, symbol: '₡' },
+  GTQ: { rate: 7.75, symbol: 'Q' },
+  NIO: { rate: 36.80, symbol: 'C$' }
+};
+
+let selectedCurrency = null;
+
+// ============================================
+// AUDIO SYSTEM
+// ============================================
+const Audio = {
+  ctx: null,
+  enabled: true,
+  
+  init() {
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      this.enabled = false;
+    }
+  },
+  
+  play(type) {
+    if (!this.enabled || !this.ctx) return;
+    
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    
+    switch(type) {
+      case 'start':
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+        setTimeout(() => this.play('start2'), 200);
+        break;
+      case 'start2':
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+        break;
+      case 'goal':
+        osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.5);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.5);
+        break;
+      case 'end':
+        osc.frequency.value = 660;
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.5);
+        break;
+    }
+  }
+};
+
+Audio.init();
+
+// ============================================
+// IMAGE LOADING HANDLER
+// ============================================
+function handleImageError(img, teamName) {
+  // Usar un círculo con las iniciales si la imagen no carga
+  const initial = teamName.charAt(0);
+  const canvas = document.createElement('canvas');
+  canvas.width = 100;
+  canvas.height = 100;
+  const ctx = canvas.getContext('2d');
+  
+  // Fondo del color del equipo
+  const colors = {
+    'Olimpia': '#FFFFFF',
+    'Motagua': '#0066CC'
+  };
+  ctx.fillStyle = colors[teamName] || '#3b82f6';
+  ctx.fillRect(0, 0, 100, 100);
+  
+  // Texto
+  ctx.fillStyle = teamName === 'Olimpia' ? '#000000' : '#FFFFFF';
+  ctx.font = 'bold 60px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(initial, 50, 50);
+  
+  img.src = canvas.toDataURL();
+}
+
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+function getState() {
+  return Storage.load(KEY) || {
+    teams: {
+      A: {
+        name: 'Olimpia',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Club_Deportivo_Olimpia_logo.svg/800px-Club_Deportivo_Olimpia_logo.svg.png',
+        attack: 82
+      },
+      B: {
+        name: 'Motagua',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Escudo_del_F%C3%BAtbol_Club_Motagua.svg/800px-Escudo_del_F%C3%BAtbol_Club_Motagua.svg.png',
+        attack: 80
+      }
+    },
+    match: { status: 'No iniciado', time: 0, maxTime: 180, scoreA: 0, scoreB: 0 },
+    prices: { A: 1, B: 1 },
+    series: {
+      A: [{ t: 0, o: 1, h: 1, l: 1, c: 1, v: 0 }],
+      B: [{ t: 0, o: 1, h: 1, l: 1, c: 1, v: 0 }]
+    },
+    stats: { posA: 50, posB: 50, shots: 0, fouls: 0, corners: 0 },
+    history: [],
+    chartTeam: 'A',
+    group: 3,
+    lookback: 120
+  };
+}
+
+function saveState(state) {
+  Storage.save(KEY, state);
+}
+
+function getUser() {
+  return Storage.load(UKEY);
+}
+
+function saveUser(user) {
+  Storage.save(UKEY, user);
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+function notify(msg, type = 'info') {
+  const notif = document.createElement('div');
+  notif.className = `notification ${type}`;
+  notif.textContent = msg;
+  document.body.appendChild(notif);
+  
+  setTimeout(() => {
+    notif.style.animation = 'slideIn 0.3s ease-out reverse';
+    setTimeout(() => notif.remove(), 300);
+  }, 3000);
+}
+
+// ============================================
+// TRADING
+// ============================================
+function buy(team, amount) {
+  const state = getState();
+  const user = getUser();
+  
+  if (!user) {
+    notify('Debes iniciar sesión', 'error');
+    return;
+  }
+  
+  const cost = amount * state.prices[team];
+  
+  if (cost > user.balance) {
+    notify('Saldo insuficiente', 'error');
+    return;
+  }
+  
+  user.balance -= cost;
+  user.holdings[team] = (user.holdings[team] || 0) + amount;
+  saveUser(user);
+  
+  state.history.unshift(`${formatTime(state.match.time)} - Compra: ${amount.toFixed(2)} ${state.teams[team].name} @ ${state.prices[team].toFixed(2)}`);
+  saveState(state);
+  
+  notify(`Compra exitosa: ${amount} tokens`, 'success');
+  render();
+}
+
+function sell(team, amount) {
+  const state = getState();
+  const user = getUser();
+  
+  if (!user) {
+    notify('Debes iniciar sesión', 'error');
+    return;
+  }
+  
+  const holdings = user.holdings[team] || 0;
+  
+  if (amount > holdings) {
+    notify('No tienes suficientes tokens', 'error');
+    return;
+  }
+  
+  const revenue = amount * state.prices[team];
+  user.balance += revenue;
+  user.holdings[team] = holdings - amount;
+  if (user.holdings[team] === 0) delete user.holdings[team];
+  saveUser(user);
+  
+  state.history.unshift(`${formatTime(state.match.time)} - Venta: ${amount.toFixed(2)} ${state.teams[team].name} @ ${state.prices[team].toFixed(2)}`);
+  saveState(state);
+  
+  notify(`Venta exitosa: ${amount} tokens`, 'success');
+  render();
+}
+
+function getPortfolioValue() {
+  const state = getState();
+  const user = getUser();
+  if (!user) return 0;
+  
+  let total = 0;
+  for (let team in user.holdings) {
+    total += user.holdings[team] * state.prices[team];
+  }
+  return total;
+}
+
+function getPNL() {
+  const user = getUser();
+  if (!user) return 0;
+  return user.balance + getPortfolioValue() - 1000;
+}
+
+// ============================================
+// SIMULATION
+// ============================================
+function tick() {
+  const state = getState();
+  if (state.match.status !== 'En juego') return;
+  
+  state.match.time += 2;
+  
+  if (state.match.time >= state.match.maxTime) {
+    state.match.status = 'Finalizado';
+    saveState(state);
+    clearInterval(window.simInterval);
+    Audio.play('end');
+    notify('¡Partido finalizado!', 'info');
+    render();
+    return;
+  }
+  
+  // Update possession
+  state.stats.posA = Math.max(20, Math.min(80, state.stats.posA + (Math.random() - 0.5) * 8));
+  state.stats.posB = 100 - state.stats.posA;
+  
+  // Events
+  if (Math.random() < 0.08) {
+    state.stats.shots++;
+    state.history.unshift(`${formatTime(state.match.time)} - Disparo`);
+  }
+  
+  if (Math.random() < 0.04) {
+    state.stats.corners++;
+    state.history.unshift(`${formatTime(state.match.time)} - Corner`);
+  }
+  
+  if (Math.random() < 0.03) {
+    state.stats.fouls++;
+    state.history.unshift(`${formatTime(state.match.time)} - Falta`);
+  }
+  
+  // Goals
+  const goalChanceA = (state.teams.A.attack / 100) * (state.stats.posA / 100) * 0.015;
+  const goalChanceB = (state.teams.B.attack / 100) * (state.stats.posB / 100) * 0.015;
+  
+  if (Math.random() < goalChanceA) {
+    state.match.scoreA++;
+    state.history.unshift(`${formatTime(state.match.time)} - ⚽ GOL de ${state.teams.A.name}!`);
+    state.prices.A *= 1.08;
+    state.prices.B *= 0.92;
+    Audio.play('goal');
+    showGoal(state.teams.A.name);
+  }
+  
+  if (Math.random() < goalChanceB) {
+    state.match.scoreB++;
+    state.history.unshift(`${formatTime(state.match.time)} - ⚽ GOL de ${state.teams.B.name}!`);
+    state.prices.B *= 1.08;
+    state.prices.A *= 0.92;
+    Audio.play('goal');
+    showGoal(state.teams.B.name);
+  }
+  
+  // Price volatility
+  state.prices.A *= (1 + (Math.random() - 0.5) * 0.015);
+  state.prices.B *= (1 + (Math.random() - 0.5) * 0.015);
+  
+  // Update candles
+  updateCandles(state);
+  
+  saveState(state);
+  render();
+}
+
+function updateCandles(state) {
+  for (let team of ['A', 'B']) {
+    const series = state.series[team];
+    const last = series[series.length - 1];
+    const price = state.prices[team];
+    
+    if (state.match.time - last.t >= state.group) {
+      series.push({ t: state.match.time, o: last.c, h: price, l: price, c: price, v: 100 });
+    } else {
+      last.c = price;
+      last.h = Math.max(last.h, price);
+      last.l = Math.min(last.l, price);
+    }
+    
+    if (series.length > 300) series.shift();
+  }
+}
+
+function showGoal(teamName) {
+  const anim = document.getElementById('goalAnimation');
+  anim.textContent = `⚽ ¡GOOOL de ${teamName}!`;
+  anim.classList.add('show');
+  setTimeout(() => anim.classList.remove('show'), 2000);
+}
+
+// ============================================
+// CHART RENDERING
+// ============================================
+function renderChart(canvas, series, lookback) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.clientWidth;
+  const H = canvas.height = canvas.clientHeight;
+  
+  ctx.clearRect(0, 0, W, H);
+  
+  const data = series.slice(-Math.min(lookback, series.length));
+  if (data.length < 2) return;
+  
+  const maxPrice = Math.max(...data.map(d => d.h));
+  const minPrice = Math.min(...data.map(d => d.l));
+  const range = (maxPrice - minPrice) * 1.2 || 0.2;
+  const paddedMin = minPrice - range * 0.1;
+  
+  const candleWidth = Math.max(2, (W / data.length) - 2);
+  const padding = 50;
+  
+  // Grid
+  ctx.strokeStyle = 'rgba(45, 55, 72, 0.3)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = padding + (H - padding * 2) * (i / 5);
+    ctx.beginPath();
+    ctx.moveTo(padding, y);
+    ctx.lineTo(W - 20, y);
+    ctx.stroke();
+    
+    const price = (paddedMin + range - (range * i / 5)).toFixed(2);
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(price, 5, y + 4);
+  }
+  
+  // Candles
+  data.forEach((d, i) => {
+    const x = padding + (i * (W - padding - 20) / data.length);
+    const yO = padding + (H - padding * 2) * (1 - (d.o - paddedMin) / range);
+    const yC = padding + (H - padding * 2) * (1 - (d.c - paddedMin) / range);
+    const yH = padding + (H - padding * 2) * (1 - (d.h - paddedMin) / range);
+    const yL = padding + (H - padding * 2) * (1 - (d.l - paddedMin) / range);
+    
+    const isGreen = d.c >= d.o;
+    ctx.fillStyle = isGreen ? '#10b981' : '#ef4444';
+    ctx.strokeStyle = isGreen ? '#10b981' : '#ef4444';
+    
+    // Wick
+    ctx.beginPath();
+    ctx.moveTo(x + candleWidth / 2, yH);
+    ctx.lineTo(x + candleWidth / 2, yL);
+    ctx.stroke();
+    
+    // Body
+    ctx.fillRect(x, Math.min(yO, yC), candleWidth, Math.max(Math.abs(yC - yO), 1));
+  });
+  
+  // Current price line
+  const currentPrice = data[data.length - 1].c;
+  const yPrice = padding + (H - padding * 2) * (1 - (currentPrice - paddedMin) / range);
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(padding, yPrice);
+  ctx.lineTo(W - 20, yPrice);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ============================================
+// VIEWS
+// ============================================
+function formatTime(t) {
+  return `${Math.floor(t / 2)}'`;
+}
+
+function simulatorView() {
+  const state = getState();
+  const user = getUser();
+  
+  const statusClass = state.match.status === 'En juego' ? 'status-live' : 'status-paused';
+  
+  return `
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+      <div class="team">
+        <img src="${state.teams.A.logo}" 
+             alt="${state.teams.A.name}" 
+             class="team-logo"
+             onerror="handleImageError(this, '${state.teams.A.name}')"
+             loading="lazy">
+        <div class="team-info">
+          <h3>${state.teams.A.name}</h3>
+          <p class="team-price">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            ${state.prices.A.toFixed(2)} USDK
+          </p>
+        </div>
+      </div>
+      <div class="score-center">
+        <div class="score">${state.match.scoreA} - ${state.match.scoreB}</div>
+        <div class="match-status ${statusClass}">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+            <circle cx="12" cy="12" r="10"></circle>
+          </svg>
+          ${state.match.status}
+        </div>
+        <div class="match-time">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ${formatTime(state.match.time)}
+        </div>
+      </div>
+      <div class="team right">
+        <img src="${state.teams.B.logo}" 
+             alt="${state.teams.B.name}" 
+             class="team-logo"
+             onerror="handleImageError(this, '${state.teams.B.name}')"
+             loading="lazy">
+        <div class="team-info">
+          <h3>${state.teams.B.name}</h3>
+          <p class="team-price">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            ${state.prices.B.toFixed(2)} USDK
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="card">
+      <div class="controls">
+        <button class="btn btn-success" onclick="startMatch()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Iniciar
+        </button>
+        <button class="btn btn-secondary" onclick="pauseMatch()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
+          Pausar
+        </button>
+        <button class="btn btn-danger" onclick="resetMatch()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          Reiniciar
+        </button>
+        
+        <div class="input-group" style="margin-left: auto;">
+          <label>Agrupación (min)</label>
+          <input type="number" class="input" id="groupInput" value="${state.group}" min="1" max="12" onchange="updateGroup(this.value)">
+        </div>
+        
+        <div class="input-group">
+          <label>Historial</label>
+          <input type="number" class="input" id="lookbackInput" value="${state.lookback}" min="40" max="240" onchange="updateLookback(this.value)">
+        </div>
+        
+        <div class="input-group">
+          <label>Equipo</label>
+          <select class="select" id="teamSelect" onchange="updateChartTeam(this.value)">
+            <option value="A" ${state.chartTeam === 'A' ? 'selected' : ''}>${state.teams.A.name}</option>
+            <option value="B" ${state.chartTeam === 'B' ? 'selected' : ''}>${state.teams.B.name}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Grid -->
+    <div class="grid-2">
+      <!-- Left Column -->
+      <div>
+        <!-- Chart -->
+        <div class="card">
+          <div class="card-title">Gráfico de Precios - ${state.teams[state.chartTeam].name}</div>
+          <div class="chart-container">
+            <canvas class="chart" id="priceChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Trading -->
+        <div class="card">
+          <div class="card-title">Panel de Trading</div>
+          <div class="trading-tabs">
+            <div class="tab ${state.chartTeam === 'A' ? 'active' : ''}" onclick="switchTab('A')">${state.teams.A.name}</div>
+            <div class="tab ${state.chartTeam === 'B' ? 'active' : ''}" onclick="switchTab('B')">${state.teams.B.name}</div>
+          </div>
+          
+          <div id="tradePanel">
+            <div class="input-group">
+              <label>Cantidad de tokens</label>
+              <input type="number" class="input" id="tradeAmount" value="10" min="0.1" step="0.1" style="width: 100%;">
+            </div>
+            <div class="quick-amounts">
+              <button class="quick-btn" onclick="setAmount(5)">5</button>
+              <button class="quick-btn" onclick="setAmount(10)">10</button>
+              <button class="quick-btn" onclick="setAmount(25)">25</button>
+              <button class="quick-btn" onclick="setAmount(50)">50</button>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+              <button class="btn btn-success" style="flex: 1;" onclick="executeBuy()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+                Comprar
+              </button>
+              <button class="btn btn-danger" style="flex: 1;" onclick="executeSell()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+                Vender
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column -->
+      <div>
+        <!-- Stats -->
+        <div class="card">
+          <div class="card-title">Estadísticas del Partido</div>
+          <div class="grid-4">
+            <div class="stat-box">
+              <div class="stat-label">Posesión A</div>
+              <div class="stat-value">${state.stats.posA.toFixed(0)}%</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Posesión B</div>
+              <div class="stat-value">${state.stats.posB.toFixed(0)}%</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Disparos</div>
+              <div class="stat-value">${state.stats.shots}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Corners</div>
+              <div class="stat-value">${state.stats.corners}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- PNL -->
+        <div class="card">
+          <div class="card-title">Tu Performance</div>
+          <div class="stat-box">
+            <div class="stat-label">PNL Total</div>
+            <div class="stat-value" style="color: ${getPNL() >= 0 ? 'var(--success)' : 'var(--danger)'}">
+              ${(getPNL() >= 0 ? '+' : '')}${getPNL().toFixed(2)} USDK
+            </div>
+          </div>
+        </div>
+        
+        <!-- Events Log -->
+        <div class="card">
+          <div class="card-title">Eventos</div>
+          <div class="log">
+            ${state.history.slice(0, 15).map(h => `<div class="log-entry">${h}</div>`).join('') || '<div class="log-entry">No hay eventos todavía</div>'}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function walletView() {
+  const user = getUser();
+  if (!user) return '<div class="card"><p>Debes iniciar sesión</p></div>';
+  
+  const state = getState();
+  const portfolioValue = getPortfolioValue();
+  const totalValue = user.balance + portfolioValue;
+  const pnl = getPNL();
+  
+  return `
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 class="card-title" style="margin: 0;">Mi Billetera</h2>
+        <button class="btn btn-primary" onclick="openCashout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Retirar Fondos
+        </button>
+      </div>
+      
+      <div class="grid-4" style="margin-bottom: 2rem;">
+        <div class="stat-box">
+          <div class="stat-label">Balance</div>
+          <div class="stat-value">${user.balance.toFixed(2)}</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">En Tokens</div>
+          <div class="stat-value">${portfolioValue.toFixed(2)}</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Total</div>
+          <div class="stat-value">${totalValue.toFixed(2)}</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">PNL</div>
+          <div class="stat-value" style="color: ${pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">
+            ${(pnl >= 0 ? '+' : '')}${pnl.toFixed(2)}
+          </div>
+        </div>
+      </div>
+      
+      <h3 style="margin-bottom: 1rem;">Posiciones Actuales</h3>
+      ${Object.keys(user.holdings).length === 0 ? 
+        '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">No tienes posiciones abiertas</p>' :
+        Object.entries(user.holdings).map(([team, amount]) => {
+          const teamData = state.teams[team];
+          const value = amount * state.prices[team];
+          return `
+            <div class="portfolio-item">
+              <div class="portfolio-left">
+                <img src="${teamData.logo}" 
+                     alt="${teamData.name}" 
+                     class="portfolio-logo"
+                     onerror="handleImageError(this, '${teamData.name}')"
+                     loading="lazy">
+                <div>
+                  <div class="portfolio-name">${teamData.name}</div>
+                  <div class="portfolio-amount">${amount.toFixed(2)} tokens @ ${state.prices[team].toFixed(2)} USDK</div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div class="portfolio-value">${value.toFixed(2)} USDK</div>
+              </div>
+            </div>
+          `;
+        }).join('')
+      }
+    </div>
+    
+    <div class="card">
+      <h3 class="card-title">Historial de Transacciones</h3>
+      <div class="log">
+        ${state.history.length === 0 ?
+          '<div class="log-entry">No hay transacciones</div>' :
+          state.history.map(h => `<div class="log-entry">${h}</div>`).join('')
+        }
+      </div>
+    </div>
+  `;
+}
+
+function leaguesView() {
+  return `
+    <div class="card">
+      <h2 class="card-title">Liga Nacional de Honduras</h2>
+      <div style="display: flex; justify-content: space-around; align-items: center; padding: 2rem;">
+        <div style="text-align: center;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Club_Deportivo_Olimpia_logo.svg/800px-Club_Deportivo_Olimpia_logo.svg.png" 
+               alt="Olimpia"
+               onerror="handleImageError(this, 'Olimpia')"
+               loading="lazy"
+               style="width: 100px; height: 100px; object-fit: contain; background: white; border-radius: 50%; padding: 12px; margin-bottom: 1rem; border: 3px solid var(--border); box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+          <h3>Olimpia</h3>
+          <p style="color: var(--text-secondary);">Token: $1.00</p>
+        </div>
+        <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">VS</div>
+        <div style="text-align: center;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Escudo_del_F%C3%BAtbol_Club_Motagua.svg/800px-Escudo_del_F%C3%BAtbol_Club_Motagua.svg.png" 
+               alt="Motagua"
+               onerror="handleImageError(this, 'Motagua')"
+               loading="lazy"
+               style="width: 100px; height: 100px; object-fit: contain; background: white; border-radius: 50%; padding: 12px; margin-bottom: 1rem; border: 3px solid var(--border); box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+          <h3>Motagua</h3>
+          <p style="color: var(--text-secondary);">Token: $1.00</p>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="location.hash='#/simulador'" style="width: 100%;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        Ir al Simulador
+      </button>
+    </div>
+  `;
+}
+
+function rankingView() {
+  const mockData = [
+    { pos: 1, name: 'Carlos M.', pnl: 1450.50 },
+    { pos: 2, name: 'Ana R.', pnl: 850.25 },
+    { pos: 3, name: 'Pedro L.', pnl: 620.00 },
+    { pos: 4, name: 'María S.', pnl: 380.75 },
+    { pos: 5, name: 'Jorge V.', pnl: 220.50 }
+  ];
+  
+  return `
+    <div class="card">
+      <h2 class="card-title">Ranking de Traders</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Top traders por PNL total</p>
+      
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <th style="padding: 1rem; text-align: left;">Posición</th>
+              <th style="padding: 1rem; text-align: left;">Trader</th>
+              <th style="padding: 1rem; text-align: right;">PNL</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${mockData.map(d => `
+              <tr style="border-bottom: 1px solid rgba(45, 55, 72, 0.3);">
+                <td style="padding: 1rem; font-weight: 700; color: var(--accent);">#${d.pos}</td>
+                <td style="padding: 1rem;">${d.name}</td>
+                <td style="padding: 1rem; text-align: right; font-weight: 600; color: var(--success);">
+                  +${d.pnl.toFixed(2)} USDK
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// ROUTING
+// ============================================
+function render() {
+  const hash = location.hash || '#/ligas';
+  const app = document.getElementById('app');
+  
+  // Update active nav
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === hash);
+  });
+  
+  if (hash.includes('simulador')) {
+    app.innerHTML = simulatorView();
+    setTimeout(() => {
+      const canvas = document.getElementById('priceChart');
+      if (canvas) {
+        const state = getState();
+        renderChart(canvas, state.series[state.chartTeam], state.lookback);
+      }
+    }, 10);
+  } else if (hash.includes('billetera')) {
+    app.innerHTML = walletView();
+  } else if (hash.includes('ranking')) {
+    app.innerHTML = rankingView();
+  } else {
+    app.innerHTML = leaguesView();
+  }
+  
+  // Update balance
+  const user = getUser();
+  const balanceEl = document.getElementById('balance');
+  if (balanceEl && user) {
+    balanceEl.textContent = user.balance.toFixed(2) + ' USDK';
+  }
+}
+
+// ============================================
+// CONTROLS
+// ============================================
+function startMatch() {
+  const state = getState();
+  state.match.status = 'En juego';
+  saveState(state);
+  if (window.simInterval) clearInterval(window.simInterval);
+  window.simInterval = setInterval(tick, 1000);
+  Audio.play('start');
+  notify('Partido iniciado', 'success');
+  render();
+}
+
+function pauseMatch() {
+  const state = getState();
+  state.match.status = 'Pausado';
+  saveState(state);
+  if (window.simInterval) clearInterval(window.simInterval);
+  notify('Partido pausado', 'info');
+  render();
+}
+
+function resetMatch() {
+  if (!confirm('¿Reiniciar el partido?')) return;
+  Storage.remove(KEY);
+  const user = getUser();
+  if (user) {
+    user.balance = 1000;
+    user.holdings = {};
+    saveUser(user);
+  }
+  if (window.simInterval) clearInterval(window.simInterval);
+  notify('Partido reiniciado', 'info');
+  render();
+}
+
+function updateGroup(value) {
+  const state = getState();
+  state.group = Math.max(1, Math.min(12, parseInt(value)));
+  saveState(state);
+  render();
+}
+
+function updateLookback(value) {
+  const state = getState();
+  state.lookback = Math.max(40, Math.min(240, parseInt(value)));
+  saveState(state);
+  render();
+}
+
+function updateChartTeam(value) {
+  const state = getState();
+  state.chartTeam = value;
+  saveState(state);
+  render();
+}
+
+function switchTab(team) {
+  const state = getState();
+  state.chartTeam = team;
+  saveState(state);
+  render();
+}
+
+function setAmount(amount) {
+  document.getElementById('tradeAmount').value = amount;
+}
+
+function executeBuy() {
+  const state = getState();
+  const amount = parseFloat(document.getElementById('tradeAmount').value) || 0;
+  if (amount <= 0) {
+    notify('Cantidad inválida', 'error');
+    return;
+  }
+  buy(state.chartTeam, amount);
+}
+
+function executeSell() {
+  const state = getState();
+  const amount = parseFloat(document.getElementById('tradeAmount').value) || 0;
+  if (amount <= 0) {
+    notify('Cantidad inválida', 'error');
+    return;
+  }
+  sell(state.chartTeam, amount);
+}
+
+// ============================================
+// LOGIN
+// ============================================
+function showLogin() {
+  document.getElementById('loginModal').classList.add('show');
+}
+
+function hideLogin() {
+  document.getElementById('loginModal').classList.remove('show');
+}
+
+document.getElementById('closeLogin').onclick = hideLogin;
+document.getElementById('createAccount').onclick = () => {
+  const name = document.getElementById('userName').value.trim();
+  const email = document.getElementById('userEmail').value.trim();
+  const pass = document.getElementById('userPass').value.trim();
+  
+  if (!name || !email || !pass) {
+    notify('Completa todos los campos', 'error');
+    return;
+  }
+  
+  saveUser({
+    name: name,
+    email: email,
+    balance: 1000,
+    holdings: {}
+  });
+  
+  hideLogin();
+  notify('Cuenta creada exitosamente', 'success');
+  render();
+};
+
+// ============================================
+// CASHOUT
+// ============================================
+function openCashout() {
+  selectedCurrency = null;
+  document.getElementById('cashoutAmount').value = '';
+  document.getElementById('cashoutSummary').style.display = 'none';
+  document.getElementById('confirmCashout').disabled = true;
+  document.querySelectorAll('.currency-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('cashoutModal').classList.add('show');
+}
+
+function closeCashoutModal() {
+  document.getElementById('cashoutModal').classList.remove('show');
+}
+
+document.getElementById('closeCashout').onclick = closeCashoutModal;
+
+function selectCurrency(currency) {
+  selectedCurrency = currency;
+  document.querySelectorAll('.currency-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-currency="${currency}"]`).classList.add('selected');
+  updateCashoutSummary();
+}
+
+function updateCashoutSummary() {
+  const amount = parseFloat(document.getElementById('cashoutAmount').value) || 0;
+  const summary = document.getElementById('cashoutSummary');
+  const btn = document.getElementById('confirmCashout');
+  
+  if (!selectedCurrency || amount <= 0) {
+    summary.style.display = 'none';
+    btn.disabled = true;
+    return;
+  }
+  
+  const user = getUser();
+  if (!user || amount > user.balance) {
+    notify('Saldo insuficiente', 'error');
+    btn.disabled = true;
+    return;
+  }
+  
+  const rate = RATES[selectedCurrency];
+  const fee = amount * 0.02;
+  const net = amount - fee;
+  const converted = net * rate.rate;
+  
+  document.getElementById('summaryAmount').textContent = amount.toFixed(2) + ' USDK';
+  document.getElementById('summaryFee').textContent = fee.toFixed(2) + ' USDK';
+  document.getElementById('summaryTotal').textContent = rate.symbol + converted.toFixed(2) + ' ' + selectedCurrency;
+  
+  summary.style.display = 'block';
+  btn.disabled = false;
+}
+
+function processCashout() {
+  const amount = parseFloat(document.getElementById('cashoutAmount').value) || 0;
+  
+  if (!selectedCurrency || amount <= 0) {
+    notify('Datos inválidos', 'error');
+    return;
+  }
+  
+  const user = getUser();
+  if (!user || amount > user.balance) {
+    notify('Saldo insuficiente', 'error');
+    return;
+  }
+  
+  const rate = RATES[selectedCurrency];
+  const fee = amount * 0.02;
+  const net = amount - fee;
+  const converted = net * rate.rate;
+  
+  user.balance -= amount;
+  saveUser(user);
+  
+  const state = getState();
+  state.history.unshift(`Retiro: ${amount.toFixed(2)} USDK → ${rate.symbol}${converted.toFixed(2)} ${selectedCurrency}`);
+  saveState(state);
+  
+  closeCashoutModal();
+  notify(`Retiro exitoso: ${rate.symbol}${converted.toFixed(2)} ${selectedCurrency}`, 'success');
+  render();
+}
+
+// ============================================
+// INITIALIZATION
+// ============================================
+window.addEventListener('hashchange', render);
+
+// Check for user
+if (!getUser()) {
+  showLogin();
+}
+
+render();
+
+// Resume simulation if active
+const state = getState();
+if (state.match.status === 'En juego') {
+  window.simInterval = setInterval(tick, 1000);
+}
+</script>
+</body>
+</html>
